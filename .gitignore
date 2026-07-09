@@ -1,0 +1,36 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Build
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Docker
+postgres_data/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Coverage
+coverage/
+
+# Misc
+*.swp
