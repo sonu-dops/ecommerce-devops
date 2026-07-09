@@ -10,7 +10,9 @@ on:
       - main
 
 jobs:
-  backend:
+
+  backend-test:
+    name: Backend Unit Tests
 
     runs-on: ubuntu-latest
 
@@ -19,22 +21,24 @@ jobs:
         working-directory: backend
 
     steps:
-
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
-      - name: Install Dependencies
+      - name: Install Backend Dependencies
         run: npm install
 
-      - name: Check Backend
-        run: node --version
+      - name: Run Backend Tests
+        run: npm test
 
-  frontend:
+  frontend-build:
+    name: Frontend Build
 
     runs-on: ubuntu-latest
 
@@ -43,17 +47,39 @@ jobs:
         working-directory: frontend
 
     steps:
-
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Install Dependencies
+      - name: Install Frontend Dependencies
         run: npm install
 
       - name: Build Frontend
         run: npm run build
+
+  docker-build:
+    name: Docker Image Build
+
+    needs:
+      - backend-test
+      - frontend-build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t ecommerce-backend:latest ./backend
+
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t ecommerce-frontend:latest ./frontend
