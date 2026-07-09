@@ -24,16 +24,18 @@ app.use(morgan("dev"));
 // ==========================
 // Database Connection
 // ==========================
-(async () => {
-  try {
-    const client = await pool.connect();
-    console.log("✅ PostgreSQL Connected Successfully");
-    client.release();
-  } catch (err) {
-    console.error("❌ Database Connection Failed");
-    console.error(err.message);
-  }
-})();
+if (process.env.NODE_ENV !== "test") {
+  (async () => {
+    try {
+      const client = await pool.connect();
+      console.log("✅ PostgreSQL Connected Successfully");
+      client.release();
+    } catch (err) {
+      console.error("❌ Database Connection Failed");
+      console.error(err.message);
+    }
+  })();
+}
 
 // ==========================
 // Routes
@@ -73,8 +75,10 @@ app.use((err, req, res, next) => {
 // ==========================
 // Server
 // ==========================
-const PORT = process.env.PORT || 5000;
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+module.exports = app;
