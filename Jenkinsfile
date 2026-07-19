@@ -48,11 +48,11 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            echo 'Build Successful 🚀'
         }
 
         failure {
-            echo 'Pipeline failed.'
+            echo 'Build Failed ❌'
         }
     }
 }
