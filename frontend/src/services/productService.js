@@ -14,3 +14,13 @@ export const getProduct = async (id) => {
     const res = await API.get(`/products/${id}`);
     return res.data.product;
 };
+
+export const updateProduct = async (id, product) => {
+  const res = await API.put(`/products/${id}`, product);
+  return res.data.product;
+};
+
+export const deleteProduct = async (id) => {
+  const res = await API.delete(`/products/${id}`);
+  return res.data;
+};
