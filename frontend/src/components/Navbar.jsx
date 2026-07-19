@@ -88,6 +88,14 @@ function Navbar() {
 
           </Link>
 
+          <Link to="/orders">
+  Orders
+</Link>
+
+<Link to="/orders">
+  Orders
+</Link>
+
           {/* Profile */}
           <div className="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center font-bold">
             S

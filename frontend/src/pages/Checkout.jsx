@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useCart } from "../context/CartContext";
+import { placeOrder } from "../services/orderService";
 
 function Checkout() {
-  const { cart } = useCart();
+  const navigate = useNavigate();
+
+  const { cart, clearCart } = useCart();
 
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -27,17 +31,44 @@ function Checkout() {
     });
   };
 
-  const placeOrder = () => {
-    alert("✅ Order placed successfully! (Backend integration coming next)");
+  const handlePlaceOrder = async () => {
+    if (cart.length === 0) {
+      alert("Cart is empty");
+      return;
+    }
+
+    try {
+      await placeOrder({
+        full_name: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        pincode: form.pincode,
+        payment_method: form.payment,
+        total_amount: total,
+        items: cart,
+      });
+
+      alert("✅ Order placed successfully!");
+
+      clearCart();
+
+      navigate("/");
+
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to place order");
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-100">
+
       <Navbar />
 
       <div className="max-w-6xl mx-auto py-10 px-6 grid md:grid-cols-2 gap-10">
 
-        {/* Customer Details */}
         <div className="bg-white rounded-xl shadow-lg p-8">
 
           <h2 className="text-3xl font-bold mb-6">
@@ -109,7 +140,6 @@ function Checkout() {
 
         </div>
 
-        {/* Order Summary */}
         <div className="bg-white rounded-xl shadow-lg p-8">
 
           <h2 className="text-3xl font-bold mb-6">
@@ -122,6 +152,7 @@ function Checkout() {
               className="flex justify-between border-b py-3"
             >
               <div>
+
                 <h3 className="font-semibold">
                   {item.name}
                 </h3>
@@ -129,21 +160,26 @@ function Checkout() {
                 <p className="text-gray-500">
                   Qty : {item.quantity}
                 </p>
+
               </div>
 
               <h3 className="font-bold">
                 ₹ {item.price * item.quantity}
               </h3>
+
             </div>
           ))}
 
           <div className="flex justify-between mt-8 text-2xl font-bold">
+
             <span>Total</span>
+
             <span>₹ {total}</span>
+
           </div>
 
           <button
-            onClick={placeOrder}
+            onClick={handlePlaceOrder}
             className="mt-8 w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg text-xl"
           >
             Place Order
@@ -152,6 +188,7 @@ function Checkout() {
         </div>
 
       </div>
+
     </div>
   );
 }
