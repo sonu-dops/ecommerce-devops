@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
+
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -18,23 +19,45 @@ function Login() {
   };
 
   const handleLogin = async (e) => {
+
     e.preventDefault();
 
     try {
+
       const res = await API.post("/auth/login", form);
 
-      localStorage.setItem("token", res.data.token);
+      localStorage.setItem(
+        "token",
+        res.data.token
+      );
+
+      localStorage.setItem(
+        "role",
+        res.data.role
+      );
 
       alert("Login Successful");
 
-      navigate("/");
+      if (res.data.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+
     } catch (err) {
-      alert(err.response?.data?.message || "Login Failed");
+
+      alert(
+        err.response?.data?.message ||
+        "Login Failed"
+      );
+
     }
+
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-100">
+
       <div className="bg-white shadow-xl rounded-2xl p-10 w-[400px]">
 
         <h1 className="text-3xl font-bold text-center mb-8">
@@ -71,6 +94,7 @@ function Login() {
         </form>
 
         <p className="text-center mt-6">
+
           Don't have an account?
 
           <Link
@@ -79,9 +103,11 @@ function Login() {
           >
             Register
           </Link>
+
         </p>
 
       </div>
+
     </div>
   );
 }

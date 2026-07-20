@@ -72,18 +72,30 @@ function AdminOrders() {
 
               <div>
 
-                <select
-                  defaultValue={order.status}
-                  onChange={(e) =>
-                    changeStatus(order.id, e.target.value)
-                  }
-                  className="border rounded-lg p-2"
-                >
-                  <option>Pending</option>
-                  <option>Packed</option>
-                  <option>Shipped</option>
-                  <option>Delivered</option>
-                </select>
+               <select
+  value={order.status}
+  onChange={async (e) => {
+    try {
+      await updateOrderStatus(
+        order.id,
+        e.target.value
+      );
+
+      loadOrders();
+
+      alert("Status Updated");
+
+    } catch (err) {
+      console.log(err);
+    }
+  }}
+  className="border rounded-lg p-2"
+>
+  <option value="Pending">Pending</option>
+  <option value="Packed">Packed</option>
+  <option value="Shipped">Shipped</option>
+  <option value="Delivered">Delivered</option>
+</select>
 
               </div>
 

@@ -6,40 +6,85 @@ import Register from "./pages/Register";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import ProductDetails from "./pages/ProductDetails";
-import AdminLogin from "./pages/AdminLogin";
+import Orders from "./pages/Orders";
+
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminProducts from "./pages/AdminProducts";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
-import Orders from "./pages/Orders";
 import AdminOrders from "./pages/AdminOrders";
+
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/product/:id" element={<ProductDetails />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="/admin" element={<AdminDashboard />} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/admin/orders" element={<AdminOrders />} />
-      <Route
-    path="/admin/products"
-    element={<AdminProducts />}
-/>
-<Route
-  path="/admin/add-product"
-  element={<AddProduct />}
-/>
 
-<Route
-  path="/admin/edit-product/:id"
-  element={<EditProduct />}
-/>
+      {/* Customer Routes */}
+
+      <Route path="/" element={<Home />} />
+
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/register" element={<Register />} />
+
+      <Route path="/cart" element={<Cart />} />
+
+      <Route path="/checkout" element={<Checkout />} />
+
+      <Route path="/orders" element={<Orders />} />
+
+      <Route
+        path="/product/:id"
+        element={<ProductDetails />}
+      />
+
+      {/* Admin Routes */}
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedAdminRoute>
+            <AdminDashboard />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/products"
+        element={
+          <ProtectedAdminRoute>
+            <AdminProducts />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/add-product"
+        element={
+          <ProtectedAdminRoute>
+            <AddProduct />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/edit-product/:id"
+        element={
+          <ProtectedAdminRoute>
+            <EditProduct />
+          </ProtectedAdminRoute>
+        }
+      />
+
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedAdminRoute>
+            <AdminOrders />
+          </ProtectedAdminRoute>
+        }
+      />
 
     </Routes>
   );
