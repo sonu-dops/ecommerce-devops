@@ -2,6 +2,7 @@ const pool = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// ================= Register =================
 const register = async (req, res) => {
   try {
     const { full_name, email, password } = req.body;
@@ -28,7 +29,9 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await pool.query(
-      "INSERT INTO users(full_name,email,password) VALUES($1,$2,$3)",
+      `INSERT INTO users
+      (full_name,email,password)
+      VALUES($1,$2,$3)`,
       [full_name, email, hashedPassword]
     );
 
@@ -37,16 +40,19 @@ const register = async (req, res) => {
       message: "User Registered Successfully",
     });
 
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       success: false,
       message: "Server Error",
     });
+
   }
 };
 
+// ================= Login =================
 const login = async (req, res) => {
 
   try {
@@ -82,22 +88,29 @@ const login = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        email: user.email,
+        role: user.role,
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       }
     );
 
     res.json({
       success: true,
       token,
+      role: user.role,
+      user: {
+        id: user.id,
+        full_name: user.full_name,
+        email: user.email,
+        role: user.role,
+      },
     });
 
-  } catch (error) {
+  } catch (err) {
 
-    console.log(error);
+    console.log(err);
 
     res.status(500).json({
       success: false,

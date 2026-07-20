@@ -25,6 +25,8 @@ services:
 
     container_name: backend
 
+    restart: always
+
     depends_on:
       - postgres
 
@@ -40,17 +42,27 @@ services:
       DB_NAME: devops_ecommerce
       JWT_SECRET: mysecret
 
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
   frontend:
     build:
       context: ./frontend
 
     container_name: frontend
 
+    restart: always
+
     depends_on:
       - backend
 
     ports:
       - "5173:5173"
+
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   postgres_data:
